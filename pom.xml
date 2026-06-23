@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.4.4</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.demo</groupId>
+  <artifactId>spring-ai-rag-prod</artifactId>
+  <version>1.0.0</version>
+
+  <properties>
+    <java.version>21</java.version>
+    <spring-ai.version>1.1.4</spring-ai.version>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-model-google-genai</artifactId>
+      <version>${spring-ai.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-model-google-genai-embedding</artifactId>
+      <version>${spring-ai.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-vector-store</artifactId>
+      <version>${spring-ai.version}</version>
+    </dependency>
+
+  </dependencies>
+
+</project>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Spring AI — Gemini Demo</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            padding: 48px 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 40px;
+            width: 100%;
+            max-width: 720px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 span.badge {
+            font-size: 0.75rem;
+            background: #4285f4;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: #4285f4;
+            box-shadow: 0 0 0 3px rgba(66,133,244,0.15);
+        }
+
+        button {
+            align-self: flex-start;
+            background: #4285f4;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: #3367d6; }
+        button:disabled { background: #a0aec0; cursor: not-allowed; }
+
+        .response-box {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 0.95rem;
+            color: #2d3748;
+            min-height: 80px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .spinner {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .spinner::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 3px solid #cbd5e0;
+            border-top-color: #4285f4;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error { color: #e53e3e; border-color: #fed7d7; background: #fff5f5; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Spring AI Demo <span class="badge">Gemini</span></h1>
+
+    <div>
+        <label for="prompt">Ask anything</label>
+        <textarea id="prompt" placeholder="e.g. Explain Spring AI in simple terms..." rows="4"></textarea>
+    </div>
+
+    <button id="askBtn" onclick="askGemini()">Ask Gemini</button>
+
+    <div class="spinner" id="spinner">Thinking…</div>
+
+    <div class="response-box" id="responseBox"></div>
+</div>
+
+<script>
+    async function askGemini() {
+        const prompt = document.getElementById('prompt').value.trim();
+        if (!prompt) return;
+
+        const btn = document.getElementById('askBtn');
+        const spinner = document.getElementById('spinner');
+        const box = document.getElementById('responseBox');
+
+        btn.disabled = true;
+        spinner.style.display = 'flex';
+        box.style.display = 'none';
+        box.classList.remove('error');
+
+        try {
+            const res = await fetch('/api/ai/ask?prompt=' + encodeURIComponent(prompt));
+            if (!res.ok) throw new Error('Server error: ' + res.status);
+            const text = await res.text();
+            box.textContent = text;
+        } catch (err) {
+            box.textContent = 'Error: ' + err.message;
+            box.classList.add('error');
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            box.style.display = 'block';
+        }
+    }
+
+    document.getElementById('prompt').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) askGemini();
+    });
+</script>
+</body>
+</html>

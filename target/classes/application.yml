@@ -1,0 +1,25 @@
+spring:
+  ai:
+    google:
+      genai:
+        project-id: ${GOOGLE_CLOUD_PROJECT_ID}
+        api-key: ${GOOGLE_API_KEY}
+        chat:
+          options:
+            model: gemini-2.5-flash
+        embedding:
+          api-key: ${GOOGLE_API_KEY}
+          options:
+            model: text-embedding-004
+
+    vectorstore:
+      weaviate:
+        host: localhost
+        scheme: http
+        port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
